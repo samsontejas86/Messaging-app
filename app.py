@@ -2,19 +2,43 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from models import Session, Message, Priority
 from datetime import datetime
-from sqlalchemy import desc
+from sqlalchemy import desc, create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 app = Flask(__name__)
 
 # Update the database connection URL to use environment variable (for deployment)
-DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://localhost/mydb')  # Fallback for local development
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+if not DATABASE_URL:
+    DATABASE_URL = 'sqlite:///messages.db'  # Fallback for local development
+
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 
-# Initialize DB session
-session = Session()
+# Initialize DB engine
+engine = create_engine(DATABASE_URL)
+
+# Create scoped session factory
+session_factory = sessionmaker(bind=engine)
+Session = scoped_session(session_factory)
+
+# Get session for each request
+def get_session():
+    session = Session()
+    try:
+        return session
+    except Exception as e:
+        session.rollback()
+        raise e
+    finally:
+        session.close()
 
 @app.route('/')
 def index():
+    session = get_session()
     sort_by = request.args.get('sort', 'timestamp')
     order = request.args.get('order', 'desc')
     status_filter = request.args.get('status', None)
@@ -33,10 +57,12 @@ def index():
         query = query.order_by(getattr(Message, sort_by))
     
     messages = query.all()
+    session.close()
     return render_template('index.html', messages=messages, Priority=Priority)
 
 @app.route('/message/<int:id>', methods=['GET', 'POST'])
 def message(id):
+    session = get_session()
     message = session.query(Message).filter_by(id=id).first()
     
     if request.method == 'POST':
@@ -52,12 +78,15 @@ def message(id):
             message.priority = priority
             
         session.commit()
+        session.close()
         return redirect(url_for('index'))
     
+    session.close()
     return render_template('message.html', message=message, Priority=Priority)
 
 @app.route('/update_status', methods=['POST'])
 def update_status():
+    session = get_session()
     message_id = request.form.get('message_id')
     new_status = request.form.get('status')
     
@@ -67,11 +96,14 @@ def update_status():
         if new_status == 'resolved':
             message.resolved_at = datetime.utcnow()
         session.commit()
+        session.close()
         return jsonify(success=True)
+    session.close()
     return jsonify(success=False), 404
 
 @app.route('/new_message', methods=['POST'])
 def new_message():
+    session = get_session()
     customer_id = request.form['customer_id']
     message_text = request.form['message_text']
     
@@ -87,14 +119,16 @@ def new_message():
     )
     session.add(new_msg)
     session.commit()
-    
+    session.close()
     return jsonify(success=True)
 
 @app.route('/search')
 def search():
+    session = get_session()
     query = request.args.get('query', '').strip()
     
     if not query:
+        session.close()
         return redirect(url_for('index'))
 
     messages = session.query(Message).filter(
@@ -102,7 +136,12 @@ def search():
         (Message.customer_id.ilike(f'%{query}%'))
     ).all()
     
+    session.close()
     return render_template('index.html', messages=messages, Priority=Priority)
 
+# This is required for Vercel
+app.debug = False
+
+# Only run the app directly in development
 if __name__ == '__main__':
-    app.run(debug=True)  # Set debug=True for development
+    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
