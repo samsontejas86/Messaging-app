@@ -1,0 +1,14 @@
+<h1>Search Results for "{{ query }}"</h1>
+
+<h2>Messages</h2>
+<ul>
+    {% for message in messages %}
+        <li>
+            <strong>Message:</strong> {{ message.message_text }} <br>
+            <strong>User ID:</strong> {{ message.customer_id }} <br>
+            <strong>Date:</strong> {{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}
+        </li>
+    {% else %}
+        <li>No messages found.</li>
+    {% endfor %}
+</ul>

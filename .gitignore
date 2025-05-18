@@ -1,0 +1,45 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environment
+venv/
+env/
+
+# Flask cache files
+*.log
+*.pot
+*.pyc
+instance/
+.cache
+
+# SQLAlchemy / SQLite database
+database.db
+*.db
+*.sqlite3
+
+# Pytest cache files
+.pytest_cache/
+
+# Flask debug and error logs
+*.log
+
+# Environment variables file
+.env
+.env.*
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# MacOS files
+.DS_Store
+
+# Windows files
+Thumbs.db
+
+# CSV files or any user data (if you don’t want to commit CSV imports)
+*.csv

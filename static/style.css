@@ -1,0 +1,268 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f6f8;
+    margin: 0;
+    padding: 0;
+    font-size: 16px; /* Increase base font size */
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 28px; /* Increase header font size */
+    font-weight: bold;
+    letter-spacing: 1px; /* Add spacing for visual appeal */
+}
+
+.main-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.inbox {
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1); /* Increase shadow for depth */
+}
+
+.inbox h2 {
+    font-size: 1.75em; /* Larger font size for section title */
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.1em; /* Increase table text size */
+}
+
+th, td {
+    padding: 12px; /* Increase padding for better spacing */
+    text-align: left;
+    font-size: 1em; /* Adjust font size in table */
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    font-size: 1.1em; /* Larger font for table headers */
+}
+
+td {
+    border-bottom: 1px solid #ddd;
+}
+
+.message-preview a {
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.message-preview a:hover {
+    text-decoration: underline;
+}
+
+.filters {
+    margin: 20px 0;
+    display: flex;
+    gap: 10px;
+}
+
+.filters select {
+    padding: 10px; /* Increase padding */
+    font-size: 1em; /* Adjust font size */
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.priority-badge {
+    padding: 6px 10px; /* Increase padding for badge */
+    border-radius: 4px;
+    font-size: 0.9em; /* Adjust badge font size */
+    font-weight: bold;
+}
+
+.priority-badge.high {
+    background-color: #ff4444;
+    color: white;
+}
+
+.priority-badge.medium {
+    background-color: #ffbb33;
+    color: black;
+}
+
+.priority-badge.low {
+    background-color: #00C851;
+    color: white;
+}
+
+.priority-selector select {
+    margin-left: 10px;
+    padding: 8px; /* Increase padding */
+    font-size: 1em; /* Adjust font size */
+}
+
+.customer-info {
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.status-select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 1em;
+}
+
+#canned-response {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 1em; /* Increase canned response input font size */
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.message-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+tr.priority-high {
+    background-color: #fff8f8;
+}
+
+tr.priority-medium {
+    background-color: #fffff8;
+}
+
+tr.priority-low {
+    background-color: #f8fff8;
+}
+/* CSS styling for Message Detail page */
+
+.chat-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+    font-size: 1.1em; /* Increase base font size */
+}
+
+.message-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+
+.priority-selector label {
+    font-size: 1.2em; /* Larger label font */
+    margin-right: 10px;
+}
+
+.priority-selector select {
+    padding: 10px;
+    font-size: 1em; /* Adjust font size */
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.customer-info p {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.chat-box {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+}
+
+.message {
+    margin-bottom: 15px;
+}
+
+.message.customer-message {
+    background-color: #e8f4ff;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1em;
+}
+
+.message.agent-message {
+    background-color: #e6ffe6;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1.1em;
+}
+
+.timestamp {
+    font-size: 0.9em;
+    color: #555;
+    display: block;
+    margin-top: 5px;
+}
+
+.response-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#canned-response {
+    padding: 12px;
+    font-size: 1em;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    width: 100%;
+}
+
+textarea[name="response"] {
+    width: 100%;
+    padding: 15px;
+    font-size: 1em; /* Larger font size for readability */
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    min-height: 100px;
+    resize: vertical;
+}
+
+button[type="submit"] {
+    padding: 12px;
+    font-size: 1.1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}

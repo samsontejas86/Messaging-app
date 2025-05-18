@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="main-container">
+    <h2>Inbox</h2>
+    
+    <!-- Filters -->
+    <div class="search-bar">
+        <form action="{{ url_for('search') }}" method="get">
+            <input type="text" name="query" placeholder="Search messages or customers...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <div class="filters">
+        <select id="status-filter" onchange="applyFilters()">
+            <option value="">All Statuses</option>
+            <option value="new">New</option>
+            <option value="in_progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+        </select>
+        
+        <select id="priority-filter" onchange="applyFilters()">
+            <option value="">All Priorities</option>
+            <option value="HIGH">High</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="LOW">Low</option>
+        </select>
+        
+        <select id="sort-by" onchange="applyFilters()">
+            <option value="timestamp">Sort by Date</option>
+            <option value="priority">Sort by Priority</option>
+        </select>
+    </div>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Customer ID</th>
+            <th>Message</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Timestamp</th>
+            <th>Actions</th>
+        </tr>
+        {% for message in messages %}
+        <tr class="priority-{{ message.priority.value }}">
+            <td>{{ message.id }}</td>
+            <td>{{ message.customer_id }}</td>
+            <td>{{ message.message_text[:50] }}...</td>
+            <td><span class="priority-badge {{ message.priority.value }}">{{ message.priority.value }}</span></td>
+            <td>
+                <select class="status-select" onchange="updateStatus({{ message.id }}, this.value);">
+                    <option value="new" {% if message.status == 'new' %}selected{% endif %}>New</option>
+                    <option value="in_progress" {% if message.status == 'in_progress' %}selected{% endif %}>In Progress</option>
+                    
+                    <option value="resolved" {% if message.status == 'resolved' %}selected{% endif %}>Resolved</option>
+                </select>
+            </td>
+            <td>{{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td><a href="{{ url_for('message', id=message.id) }}">View</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<script>
+function updateStatus(messageId, newStatus) {
+    fetch('/update_status', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `message_id=${messageId}&status=${newStatus}`
+    });
+}
+
+function applyFilters() {
+    const status = document.getElementById('status-filter').value;
+    const priority = document.getElementById('priority-filter').value;
+    const sortBy = document.getElementById('sort-by').value;
+    
+    window.location.href = `/?status=${status}&priority=${priority}&sort=${sortBy}`;
+}
+</script>
+{% endblock %}

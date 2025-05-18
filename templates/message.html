@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Message Detail{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+    <div class="message-info">
+        <div class="priority-selector">
+            <label>Priority:</label>
+            <select name="priority" onchange="updatePriority({{ message.id }}, this.value)">
+                {% for priority in Priority %}
+                <option value="{{ priority.value }}" {% if message.priority == priority %}selected{% endif %}>
+                    {{ priority.value }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="customer-info">
+            <p>Customer ID: {{ message.customer_id }}</p>
+            <p>Status: {{ message.status }}</p>
+        </div>
+    </div>
+
+    <div class="chat-box">
+        <div class="message customer-message">
+            <p>🧑‍💼 {{ message.message_text }}</p>
+            <span class="timestamp">{{ message.timestamp.strftime('%Y-%m-%d %H:%M') }}</span>
+        </div>
+        {% if message.response_text %}
+        <div class="message agent-message">
+            <p>👩‍💻 {{ message.response_text }}</p>
+            <span class="timestamp">{{ message.resolved_at.strftime('%Y-%m-%d %H:%M') if message.resolved_at else '' }}</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <form method="post" class="response-form">
+        <select id="canned-response" onchange="insertCannedResponse()">
+            <option value="">Select a canned response</option>
+            <option value="Thank you for reaching out. We'll look into this right away.">General Acknowledgment</option>
+            <option value="I apologize for any inconvenience caused.">Apology</option>
+            <option value="Is there anything else I can help you with?">Follow-up</option>
+        </select>
+        
+        <textarea name="response" placeholder="Type your response here..."></textarea>
+        <button type="submit">Send Response</button>
+    </form>
+</div>
+
+<script>
+function insertCannedResponse() {
+    const select = document.getElementById('canned-response');
+    const textarea = document.querySelector('textarea[name="response"]');
+    textarea.value = select.value;
+}
+
+function updatePriority(messageId, newPriority) {
+    fetch('/update_priority', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `message_id=${messageId}&priority=${newPriority}`
+    });
+}
+</script>
+{% endblock %}
